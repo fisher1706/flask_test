@@ -12,7 +12,7 @@ class Article(db.Model):
     intro = db.Column(db.String(300), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     text = db.Column(db.Text, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow())
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Article %r>' % self.id
@@ -29,6 +29,18 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/posts')
+def posts():
+    articles = Article.query.order_by(Article.date.desc()).all()
+    return render_template('posts.html', articles=articles)
+
+
+@app.route('/posts/<int:id>')
+def post_detail(id):
+    article = Article.query.get(id)
+    return render_template('post_detail.html', article=article)
+
+
 @app.route('/create-article', methods=['POST', 'GET'])
 def create_article():
     if request.method == "POST":
@@ -41,17 +53,12 @@ def create_article():
         try:
             db.session.add(article)
             db.session.commit()
-            return redirect('/')
+            return redirect('/posts')
         except:
             return "Error while adding article!"
 
     else:
         return render_template('create-article.html')
-
-
-# @app.route('/user/<string:name>/<int:id>')
-# def user(name, id):
-#     return 'User page: {} - id: {}'.format(name, id)
 
 
 if __name__ == '__main__':
