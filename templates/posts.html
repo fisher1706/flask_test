@@ -7,13 +7,17 @@
 {% block body %}
     <div class="container mt-5">
         <h1>All articles</h1>
-        {% for i in articles %}
-            <div class="alter alert-info">
-                <h2>{{ i.title }}</h2>
-                <p>{{ i.intro }}</p>
-                <p><b>Date: {{ i.date.date() }}</b></p>
-                <a href="/posts/{{ i.id }}" class="btn btn-warning">Detail</a>
-            </div>
-        {% endfor %}
+        {% if articles|length > 0  %}
+            {% for i in articles %}
+                <div class="alter alert-info">
+                    <h2>{{ i.title }}</h2>
+                    <p>{{ i.intro }}</p>
+                    <p><b>Date: {{ i.date.date() }}</b></p>
+                    <a href="/posts/{{ i.id }}" class="btn btn-warning">Detail</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>We have not any article!</p>
+        {% endif %}
     </div>
 {% endblock %}
